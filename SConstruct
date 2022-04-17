@@ -39,21 +39,27 @@ env = SConscript("godot-cpp/SConstruct")
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=["extension/src/"])
+env.Append(CXXFLAGS=["-Wl,--wrap,memset,--wrap,memcpy,--wrap,memmove,--wrap,memcmp "])
+env.Append(CXXFLAGS=["-Wl,--wrap,strlen,--wrap,strcmp,--wrap,strncmp "])
+env.Append(CXXFLAGS=["-Wl,--wrap,malloc,--wrap,calloc,--wrap,realloc,--wrap,free "])
+env.Append(CXXFLAGS=["-static"])
 sources = Glob("extension/src/*.cpp")
 
 if env["platform"] == "osx":
-    library = env.SharedLibrary(
+    program = env.Program(
         "game/bin/summator/libgdsummator.{}.{}.framework/libgdsummator.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
+            env["platform"], env["target"], env["platform"], env["target"], ".elf"
         ),
         source=sources,
+        libs=env["LIBS"],
     )
 else:
-    library = env.SharedLibrary(
+    program = env.Program(
         "game/bin/summator/libgdsummator.{}.{}.{}{}".format(
-            env["platform"], env["target"], env["arch_suffix"], env["SHLIBSUFFIX"]
+            env["platform"], env["target"], env["arch_suffix"], ".elf"
         ),
         source=sources,
+        libs=env["LIBS"],
     )
 
-Default(library)
+Default(program)

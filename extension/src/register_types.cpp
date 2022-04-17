@@ -29,6 +29,10 @@ SOFTWARE.
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
+int main()
+{
+}
+
 void register_summator_types()
 {
 	godot::ClassDB::register_class<Summator>();
